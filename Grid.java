@@ -3,8 +3,22 @@ import java.io.*;
 
 public class Grid{
     char arrGrid[][] = new char[18][18];
+    Player player1;
+    Player player2;
 
-    public void fillGrid(){
+    public Grid(Player player1,Player player2){
+        this.player1 = player1;
+        this.player2 = player2;
+    }
+
+    public static int[] convertCoords(int posX,int posY){ // used to convert coods from 8*8 grid , to the the real bigGrid
+        int[] res = new int[2];
+        res[0] = 2*posX;
+        res[1] = 2*posY;
+        return res;
+    }
+
+    public void fillGridMainLines(){   // grid is empty now
         for(int i=0;i<arrGrid.length;i++){
             for(int j=0;j<arrGrid[0].length;j++){
                 if(i==0){
@@ -27,6 +41,25 @@ public class Grid{
                         }
                     }
                 }
+            }
+        }
+    }
+
+    public void fillPlayersPieces(){
+        for(Piece p : player1.pieces){
+            int[] correspondantPos = convertCoords(p.posX,p.posY);
+            arrGrid[correspondantPos[0]][correspondantPos[1]] = player1.pieceShape.charAt(0);
+        }
+        for(Piece p : player2.pieces){
+            int[] correspondantPos = convertCoords(p.posX,p.posY);
+            arrGrid[correspondantPos[0]][correspondantPos[1]] = player2.pieceShape.charAt(0);
+        }
+    }
+
+    public void clearGrid(){
+        for(int i=2;i<=16;i=i+2){
+            for(int j=2;j<=16;j=j+2){
+                arrGrid[i][j] = 0;
             }
         }
     }
@@ -55,10 +88,14 @@ public class Grid{
     }
 
     public static void main(String[] args){
-        Grid obj = new Grid();
-        obj.fillGrid();
+        Player player1 = new Player("Ralph","front","@");
+        player1.fillPieces();
+        Player player2 = new Player("Oliver","back","$");
+        player2.fillPieces();
+        Grid obj = new Grid(player1,player2);
+        obj.fillGridMainLines();
+        obj.fillPlayersPieces();
         obj.drawGrid();
-        //System.out.println(obj.arrGrid[0].length);
 
     }
 
