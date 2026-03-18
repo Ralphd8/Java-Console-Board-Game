@@ -5,11 +5,10 @@ public class Move {
         Player player2;
         Piece p;
         boolean acceptableMove = false;
+        boolean keepPlaying = false;
         int destX;
         int destY;
         boolean specialPiece = (p instanceof specialPiece) ? true : false;
-        int finalDestX;
-        int finalDestY;
         Piece removed;
 
         public Move(Player player1,Player player2,Piece p,int destX,int destY){
@@ -52,40 +51,123 @@ public class Move {
         }
 
         public void checkingMoveValidity(){
+            Player player = (checkingIfPieceBelongsToPlayer1() == true) ? player1 : player2;
+            Player opponent = (player == player1) ? player2 : player1;
+            String position = player.position;
             if(p.posX != destX && p.posY != destY){ // if diagnoal movement
                 acceptableMove = false;
                 return;
             }
-            else if(p.posX == destX && p.posY == destY){ // if destination == current position 
+            if(p.posX == destX && p.posY == destY){ // if destination == current position 
                 acceptableMove = false;
                 return; 
             }
-            else if(destX > 8 || destX < 1 || destY > 8 || destY < 1){  // if destination outside the grid
+            if(destX > 8 || destX < 1 || destY > 8 || destY < 1){  // if destination outside the grid
                 acceptableMove = false;
                 return;
             }
-            else if(checkingIfDestBelongsToPieceColleugues() == true){ // if destination belongs to colleugues
+            if(checkingIfDestBelongsToPieceColleugues() == true){ // if destination belongs to colleugues
                 acceptableMove = false;
                 return;
             }
-            else if(checkingIfDestIsEmptyPlace() == false){ // destination is not empty place
+            if(checkingIfDestIsEmptyPlace() == false){ // destination is not empty place
                 acceptableMove = false;
                 return;
             }
-            
-
-            else if(specialPiece == false && checkingIfPieceBelongsToPlayer1() == true){
-
-                if(player1.position.equals("front")){
-                    if((destX != p.posX && destY != p.posY+1) || (destX != p.posX && destY != p.posY-1) || (destX != p.posX-1 && destY != p.posY)){
+            if(specialPiece == false){  
+                if((position.equals("front") && destX > p.posX) || (position.equals("back") && destX < p.posX) || (Math.abs(destX - p.posX) + Math.abs(destY - p.posY)) > 2.0){ // if normalPiece and move backward or normalPiece and movementDistance > 2
+                    acceptableMove = false;
+                    return;
+                }
+                if(Math.abs(destX - p.posX) + Math.abs(destY - p.posY) == 2.0){
+                    int checkX = p.posX + ((destX - p.posX) / 2);
+                    int checkY = p.posY + ((destY - p.posY) / 2);
+                    int count = 0;
+                    for(Piece pc : player.pieces){ // if colleugue piece between 
+                        if(pc.posX == checkX && pc.posY == checkY){
+                            acceptableMove = false;
+                            return;
+                        }
+                    }
+                    for(Piece pc : opponent.pieces){ // if opponent piece in between
+                        if(pc.posX == checkX && pc.posY == checkY){
+                            count++;
+                            opponent.deletePiece(checkX,checkY);
+                            keepPlaying = true;
+                            p.changeLocation(destX,destY);
+                            if((player.position.equals("front") && destX == 1) || (player.position.equals("back") && destX == 8)){
+                                player.transitionToSpecialPiece(destX,destY);
+                            }
+                            acceptableMove = true;
+                            return;
+                        }
+                    }
+                    if(count == 0){
                         acceptableMove = false;
                         return;
                     }
-
+                }
+                if(Math.abs(destX - p.posX) + Math.abs(destY - p.posY) == 2.0){ // if movement distance == 1
+                    p.changeLocation(destX,destY);
+                    return;
                 }
             }
-            
+            if(specialPiece == true){
+                acceptableMove = true;
+                if(p.posY == destY){
+                    for(Piece pc : player.pieces){
+                        if(pc == p){
+                            continue;
+                        }
+                        if(pc.posY == destY && (double) pc.posX > Math.min(p.posX,destX) && (double) pc.posX < Math.max(p.posX,destX)){
+                            p.changeLocation(destX,destY);
+                            return;
+                        }
+                    }
+                }
+                if(p.posX == destX){
+                    for(Piece pc : player.pieces){
+                        if(pc == p){
+                            continue;
+                        }
+                        if(pc.posX == destX && (double) pc.posY > Math.min(p.posY,destY) && (double) pc.posY < Math.max(p.posY,destY)){
+                            p.changeLocation(destX,destY);
+                            return;
+                        }
+                    }
+                }
+                int delX=1;
+                int delY=1;
+                int count = 0;
+                if(p.posY == destY){
+                    for(Piece pc : opponent.pieces){
+                        if(pc.posY == destY && (double) pc.posX > Math.min(p.posX,destX) && (double) pc.posX < Math.max(p.posX,destX)){
+                            count++;
+                            delX = pc.posX;
+                            delY = pc.posY;
+                        }
+                    }
+                }
+                if(p.posX == destX){
+                    for(Piece pc : opponent.pieces){
+                        if(pc.posX == destX && (double) pc.posY > Math.min(p.posY,destY) && (double) pc.posY < Math.max(p.posY,destY)){
+                            count++;
+                            delX = pc.posX;
+                            delY = pc.posY;
+                        }
+                    }
+                }
+                if(count == 1){
+                    p.changeLocation(destX,destY);
+                    opponent.deletePiece(delX,delY);
+                    keepPlaying = true;
+                    return;
+                }
+                else{
+                    p.changeLocation(destX,destY);
+                    return;
+                }
+            }
         }
-
 
 }

@@ -7,6 +7,11 @@ public abstract class Piece {
         this.posY = posY;
     }
 
+    public void changeLocation(int newX,int newY){
+        this.posX = newX;
+        this.posY = newY;
+    }
+
 }
 
 class normalPiece extends Piece{
