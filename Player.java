@@ -60,6 +60,24 @@ public class Player {
         }
     }
 
+    /*public boolean pieceBasedOnCoordsExistence(int posX,int posY){
+        for(Piece pc : pieces){
+            if(pc.posX == posX && pc.posY == posY){
+                return true;
+            }
+        }
+        return false;
+    }*/
+
+    public Piece returnPieceBasedOnCoords (int posX,int posY){
+        for(Piece pc : pieces){
+            if(pc.posX == posX && pc.posY == posY){
+                return pc;
+            }
+        }
+        return null;
+    }
+
     public boolean checkForLost(){
         if(pieces.size() == 0){
             return true;

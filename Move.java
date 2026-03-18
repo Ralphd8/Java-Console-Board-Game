@@ -9,7 +9,6 @@ public class Move {
         int destX;
         int destY;
         boolean specialPiece = (p instanceof specialPiece) ? true : false;
-        Piece removed;
 
         public Move(Player player1,Player player2,Piece p,int destX,int destY){
             this.player1 = player1;
@@ -56,27 +55,33 @@ public class Move {
             String position = player.position;
             if(p.posX != destX && p.posY != destY){ // if diagnoal movement
                 acceptableMove = false;
+                System.out.println("Diagonal Move");
                 return;
             }
             if(p.posX == destX && p.posY == destY){ // if destination == current position 
                 acceptableMove = false;
+                System.out.println("Destination Location == Current Location");
                 return; 
             }
             if(destX > 8 || destX < 1 || destY > 8 || destY < 1){  // if destination outside the grid
                 acceptableMove = false;
+                System.out.println("Destination Location is Outside The Grid");
                 return;
             }
             if(checkingIfDestBelongsToPieceColleugues() == true){ // if destination belongs to colleugues
                 acceptableMove = false;
+                System.out.println("Destination Location Belongs to Colleugues");
                 return;
             }
             if(checkingIfDestIsEmptyPlace() == false){ // destination is not empty place
                 acceptableMove = false;
+                System.out.println("Destiation is not empty");
                 return;
             }
             if(specialPiece == false){  
                 if((position.equals("front") && destX > p.posX) || (position.equals("back") && destX < p.posX) || (Math.abs(destX - p.posX) + Math.abs(destY - p.posY)) > 2.0){ // if normalPiece and move backward or normalPiece and movementDistance > 2
                     acceptableMove = false;
+                    System.out.println("Normal Piece and Move Backward || Movement > 2");
                     return;
                 }
                 if(Math.abs(destX - p.posX) + Math.abs(destY - p.posY) == 2.0){
@@ -86,6 +91,7 @@ public class Move {
                     for(Piece pc : player.pieces){ // if colleugue piece between 
                         if(pc.posX == checkX && pc.posY == checkY){
                             acceptableMove = false;
+                            System.out.println("Normal Piece , movement == 2 and in between colleugue piece");
                             return;
                         }
                     }
@@ -107,8 +113,10 @@ public class Move {
                         return;
                     }
                 }
-                if(Math.abs(destX - p.posX) + Math.abs(destY - p.posY) == 2.0){ // if movement distance == 1
+                if(Math.abs(destX - p.posX) + Math.abs(destY - p.posY) == 1.0){ // if movement distance == 1
                     p.changeLocation(destX,destY);
+                    acceptableMove = true;
+                    System.out.println("Successfull Move");
                     return;
                 }
             }
@@ -168,6 +176,18 @@ public class Move {
                     return;
                 }
             }
+        }
+
+        public static void main(String[] args){
+            Player player1 = new Player("Ralph","front","@");
+            Player player2 = new Player("Oliver","back","$");
+            player1.fillPieces();
+            player2.fillPieces();
+            Piece p = player1.returnPieceBasedOnCoords(7,1);
+            Move move = new Move(player1,player2,p,6,1);
+            move.checkingMoveValidity();
+
+
         }
 
 }

@@ -87,7 +87,7 @@ public class Grid{
         }
     }
 
-    public static void main(String[] args){
+    /*public static void main(String[] args){
         Player player1 = new Player("Ralph","front","@");
         player1.fillPieces();
         Player player2 = new Player("Oliver","back","$");
@@ -97,6 +97,6 @@ public class Grid{
         obj.fillPlayersPieces();
         obj.drawGrid();
 
-    }
+    }*/
 
 }
