@@ -83,6 +83,12 @@ public class Game {
 
         }while(player1.checkForLost() == false && player2.checkForLost() == false);
 
+        if(player1.checkForLost()){
+            System.out.println(player2.name + "win!");
+        }
+        else{
+            System.out.println(player1.name + "wins!");
+        }
         
     }
 }

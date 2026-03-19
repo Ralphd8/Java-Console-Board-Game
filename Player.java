@@ -44,6 +44,7 @@ public class Player {
         for(Piece p : pieces){
             if(p.posX == posX && p.posY == posY){
                 pieces.remove(p);
+                System.out.println("Old Normal piece removed!");
                 break;
             }
         }
@@ -85,6 +86,19 @@ public class Player {
         else{
             return false;
         }
+    }
+
+    public static void main(String[] args){
+        Player player = new Player("Ralph","front","@");
+        player.fillPieces();
+        ArrayList<Piece> arr = player.pieces;
+        
+        player.transitionToSpecialPiece(player.pieces.get(0).posX,player.pieces.get(0).posY);
+        Piece p = player.pieces.get(player.pieces.size()-1);
+        System.out.println(p instanceof specialPiece);
+        System.out.println(p.posY);
+
+
     }
 
 }

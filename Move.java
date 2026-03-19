@@ -16,6 +16,7 @@ public class Move {
             this.p = p;
             this.destX = destX;
             this.destY = destY;
+            this.specialPiece = (p instanceof specialPiece);
         }
 
         public boolean checkingIfPieceBelongsToPlayer1(){
@@ -102,6 +103,7 @@ public class Move {
                             keepPlaying = true;
                             p.changeLocation(destX,destY);
                             if((player.position.equals("front") && destX == 1) || (player.position.equals("back") && destX == 8)){
+                                System.out.println("Transitioned to special piece");
                                 player.transitionToSpecialPiece(destX,destY);
                             }
                             acceptableMove = true;
@@ -116,6 +118,9 @@ public class Move {
                 if(Math.abs(destX - p.posX) + Math.abs(destY - p.posY) == 1.0){ // if movement distance == 1
                     p.changeLocation(destX,destY);
                     acceptableMove = true;
+                    if((player.position.equals("front") && destX == 1) || (player.position.equals("back") && destX == 8)){
+                        player.transitionToSpecialPiece(destX,destY);
+                    }
                     System.out.println("Successfull Move");
                     return;
                 }
