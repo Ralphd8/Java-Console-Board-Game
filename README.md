@@ -1,12 +1,43 @@
-This simple chess game is created using the Java programming language.
+# Java Console Board Game
 
-How to Play:
-1)On your PC, open Git Bash and run:
-git clone https://github.com/Ralphd8/Simple-Chess-Game.git
-2)Open the project in VS Code and run the Game.java file.
+A console-based strategy board game developed in Java featuring custom movement mechanics, piece promotion logic, and turn-based gameplay. The project focuses on object-oriented design, modular game architecture, and implementation of board game logic using Java.
 
-Game Rules:
-1)All pieces have the same functionality.
-2)Diagonal movement is not allowed.
-3)Pieces cannot move backward unless they are special pieces.
-4)Pieces cannot move more than two squares, unless they are special pieces.
+## Features
+
+* Turn-based gameplay
+* Custom board movement system
+* Piece promotion mechanics
+* Capture system
+* Console-rendered game board
+* Object-oriented class design
+
+## Game Rules
+
+* All pieces start with equal movement capabilities.
+* Pieces can move forward, left, or right.
+* Pieces cannot move backward initially.
+* Standard pieces can move up to two cells.
+* When a piece reaches the opponent’s end of the board, it becomes a special piece.
+* Special pieces can move backward and travel more than two cells.
+
+## Technologies Used
+
+* Java
+* Object-Oriented Programming (OOP)
+* Collections Framework
+
+## How to Run
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/Ralphd8/Java-Console-Board-Game.git
+```
+
+2. Open the project in your preferred Java IDE.
+
+3. Run:
+
+```bash
+Game.java
+```
