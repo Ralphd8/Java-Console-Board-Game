@@ -1,104 +1,120 @@
-import java.util.*;
-import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Player {
-    String name;
-    String position; // front or back
-    String pieceShape;
-    ArrayList<Piece> pieces = new ArrayList<>();
-    
-    public Player(String name,String position,String pieceShape){
+
+    private String name;
+    private String position;
+    private String pieceShape;
+
+    List<Piece> pieces = new ArrayList<>();
+
+    public Player(String name, String position, String pieceShape) {
         this.name = name;
         this.position = position;
         this.pieceShape = pieceShape;
     }
 
-    public void fillPieces(){
-        if(position.equals("front")){
-            for(int i=0;i<16;i++){
+    public String getName() {
+        return name;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public String getPieceShape() {
+        return pieceShape;
+    }
+
+    public List<Piece> getPieces() {
+        return pieces;
+    }
+
+    public void fillPieces() {
+
+        if (position.equals("front")) {
+
+            for (int i = 0; i < 16; i++) {
+
                 Piece p;
-                if(i<8){
-                    p = new normalPiece(8,i+1);
+
+                if (i < 8) {
+                    p = new NormalPiece(8, i + 1);
+                } else {
+                    p = new NormalPiece(7, i + 1 - 8);
                 }
-                else{
-                    p = new normalPiece(7,i+1-8);
-                }
+
                 pieces.add(p);
             }
         }
-        if(position.equals("back")){
-            for(int i=0;i<16;i++){
+
+        if (position.equals("back")) {
+
+            for (int i = 0; i < 16; i++) {
+
                 Piece p;
-                if(i<8){
-                    p = new normalPiece(1,i+1);
+
+                if (i < 8) {
+                    p = new NormalPiece(1, i + 1);
+                } else {
+                    p = new NormalPiece(2, i + 1 - 8);
                 }
-                else{
-                    p = new normalPiece(2,i+1-8);
-                }
+
                 pieces.add(p);
             }
         }
     }
 
-    public void transitionToSpecialPiece(int posX,int posY){
-        for(Piece p : pieces){
-            if(p.posX == posX && p.posY == posY){
-                pieces.remove(p);
-                System.out.println("Old Normal piece removed!");
+    public void transitionToSpecialPiece(int posX, int posY) {
+
+        Piece targetPiece = null;
+
+        for (Piece p : pieces) {
+
+            if (p.getPosX() == posX && p.getPosY() == posY) {
+                targetPiece = p;
                 break;
             }
         }
-        Piece p = new specialPiece(posX,posY);
-        pieces.add(p);
+
+        if (targetPiece != null) {
+            pieces.remove(targetPiece);
+        }
+
+        pieces.add(new SpecialPiece(posX, posY));
     }
 
-    public void deletePiece(int posX,int posY){ // used when the player loose a piece
-        for(Piece p : pieces){
-            if(p.posX == posX && p.posY == posY){
-                pieces.remove(p);
+    public void deletePiece(int posX, int posY) {
+
+        Piece targetPiece = null;
+
+        for (Piece p : pieces) {
+
+            if (p.getPosX() == posX && p.getPosY() == posY) {
+                targetPiece = p;
                 break;
             }
         }
+
+        if (targetPiece != null) {
+            pieces.remove(targetPiece);
+        }
     }
 
-    /*public boolean pieceBasedOnCoordsExistence(int posX,int posY){
-        for(Piece pc : pieces){
-            if(pc.posX == posX && pc.posY == posY){
-                return true;
-            }
-        }
-        return false;
-    }*/
+    public Piece returnPieceBasedOnCoords(int posX, int posY) {
 
-    public Piece returnPieceBasedOnCoords (int posX,int posY){
-        for(Piece pc : pieces){
-            if(pc.posX == posX && pc.posY == posY){
-                return pc;
+        for (Piece p : pieces) {
+
+            if (p.getPosX() == posX && p.getPosY() == posY) {
+                return p;
             }
         }
+
         return null;
     }
 
-    public boolean checkForLost(){
-        if(pieces.size() == 0){
-            return true;
-        }
-        else{
-            return false;
-        }
+    public boolean checkForLost() {
+        return pieces.isEmpty();
     }
-
-    public static void main(String[] args){
-        Player player = new Player("Ralph","front","@");
-        player.fillPieces();
-        ArrayList<Piece> arr = player.pieces;
-        
-        player.transitionToSpecialPiece(player.pieces.get(0).posX,player.pieces.get(0).posY);
-        Piece p = player.pieces.get(player.pieces.size()-1);
-        System.out.println(p instanceof specialPiece);
-        System.out.println(p.posY);
-
-
-    }
-
 }
